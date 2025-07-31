@@ -1,0 +1,58 @@
+# Configuration for VAE and MAR training
+data:
+  dataset_path: "data/cifar-100-python"
+  batch_size: 64
+  num_workers: 4
+  img_size: 32
+  num_classes: 100
+
+vae:
+  in_channels: 3
+  latent_dim: 64  # 对应MAR中的vae_embed_dim
+  hidden_channels: 128
+  res_nums: 2
+  beta: 4.0
+  learning_rate: 1e-3
+  epochs: 100
+  save_interval: 10
+  checkpoint_dir: "checkpoints/vae"
+
+mar:
+  img_size: 32
+  vae_stride: 4
+  patch_size: 1
+  encoder_embed_dim: 256
+  encoder_depth: 8
+  encoder_num_heads: 8
+  decoder_embed_dim: 256
+  decoder_depth: 8
+  decoder_num_heads: 8
+  mlp_ratio: 4.0
+  vae_embed_dim: 64  # 与VAE的latent_dim保持一致
+  mask_ratio_min: 0.7
+  label_drop_prob: 0.1
+  class_num: 100
+  buffer_size: 64
+  diffloss_d: 3
+  diffloss_w: 512
+  num_sampling_steps: 50
+  diffusion_batch_mul: 4
+  grad_checkpointing: false
+  learning_rate: 1e-4
+  epochs: 200
+  save_interval: 10
+  checkpoint_dir: "checkpoints/mar"
+  sample_interval: 10  # 每10个epoch生成样本
+
+training:
+  device: "cuda"
+  seed: 42
+  resume_vae: null  # 如果要继续训练，填入VAE checkpoint路径
+  resume_mar: null  # 如果要继续训练，填入MAR checkpoint路径
+
+evaluation:
+  fid_batch_size: 50
+  num_samples: 10000  # 用于FID计算的样本数量
+  temperature: 1.0
+  cfg_scale: 1.0
+  num_iter: 64

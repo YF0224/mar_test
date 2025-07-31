@@ -1,0 +1,67 @@
+# 配置文件 - config.yaml
+
+# 数据配置
+data:
+  dataset_path: "data/cifar-100-python"
+  batch_size: 32
+  num_workers: 4
+  num_classes: 100
+
+# KL-VAE配置
+klvae:
+  # KL-VAE特有参数
+  embed_dim: 16  # 潜在空间维度
+  ch_mult: [1, 2, 4] # 通道倍数
+  use_variational: true  # 是否使用变分采样
+  pretrained_path: null  # 预训练模型路径，如果有的话
+
+  # 训练参数
+  epochs: 100
+  learning_rate: 1e-4
+  kl_weight: 1.0  # KL散度损失权重
+  save_interval: 10
+  checkpoint_dir: "checkpoints/klvae"
+
+# MAR配置
+mar:
+  img_size: 32
+  vae_stride: 4  # 根据你的KL-VAE下采样率调整
+  patch_size: 1
+  encoder_embed_dim: 768
+  encoder_depth: 12
+  encoder_num_heads: 12
+  decoder_embed_dim: 512
+  decoder_depth: 8
+  decoder_num_heads: 8
+  mlp_ratio: 4.0
+  vae_embed_dim: 16  # 应该与klvae.embed_dim一致
+  mask_ratio_min: 0.5
+  label_drop_prob: 0.1
+  class_num: 100
+  buffer_size: 64
+  diffloss_d: 3
+  diffloss_w: 512
+  num_sampling_steps: 100
+  diffusion_batch_mul: 4
+  grad_checkpointing: true
+  use_posterior_mean: false  # 是否使用后验分布均值而不是采样
+
+  # 训练参数
+  epochs: 200
+  learning_rate: 1e-4
+  save_interval: 20
+  sample_interval: 20
+  checkpoint_dir: "checkpoints/mar2"
+
+# 训练配置
+training:
+  device: "cuda"
+  seed: 42
+  resume_vae: null  # 恢复VAE训练的路径
+  resume_mar: null  # 恢复MAR训练的路径
+
+# 评估配置
+evaluation:
+  num_iter: 64
+  cfg_scale: 2.0
+  temperature: 1.0
