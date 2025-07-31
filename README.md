@@ -1,1 +1,2 @@
 # mar_test
+我希望用Kaiming He的MAR model来测试一下他与VQVAE这类VQ模型的优劣之处
